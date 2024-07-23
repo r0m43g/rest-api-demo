@@ -2,7 +2,8 @@ package main
 
 import (
   "fmt"
-  "github.com/r0m43g/rest-api-demo/db"
+  "context"
+  "github.com/r0m43g/rest-api-demo/internal/db"
 )
 
 func Run() error {
@@ -11,10 +12,10 @@ func Run() error {
   if err != nil {
     return fmt.Errorf("Failed to create database: %v", err)
   }
-  if err := db.Ping(); err != nil {
+  if err := db.Ping(context.Background()); err != nil {
     return fmt.Errorf("Failed to ping database: %v", err)
   }
-
+  fmt.Println("Database is up and running!")
   return nil
 }
 

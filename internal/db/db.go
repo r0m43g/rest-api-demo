@@ -13,7 +13,7 @@ type Database struct {
 }
 
 func NewDatabase() (*Database, error) {
-  connectionString := "user:password@/database"
+  connectionString := "user:password@/comdb"
 
   dbConn, err := sqlx.Connect("mysql", connectionString)
   if err != nil {
