@@ -1,64 +1,94 @@
 package comment
 
 import (
-  "context"
-  "errors"
-  "fmt"
+	"context"
+	"errors"
+	"fmt"
 )
 
 // Errors
 var (
-  ErrFetchingComment = errors.New("Failed to fetch comment")
-  NotImplemented = errors.New("Not implemented")
+	ErrFetchingComment = errors.New("Failed to fetch comment")
+	NotImplemented     = errors.New("Not implemented")
 )
 
 // Comment is a struct that represents a comment in our application
 type Comment struct {
-  ID string
-  Slug string
-  Body string
-  Author string
+	ID     string
+	Slug   string
+	Body   string
+	Author string
 }
 
 // CommentServiceInterface is an interface that represents a service that manages comments
 type Store interface {
-  GetComment(context.Context, string) (Comment, error)
-  CreateComment(context.Context, Comment) (Comment, error)
-  UpdateComment(context.Context, Comment) (Comment, error)
-  DeleteComment(context.Context, string) error
+	GetComment(context.Context, string) (Comment, error)
+	PostComment(context.Context, Comment) (Comment, error)
+	UpdateComment(context.Context, string, Comment) (Comment, error)
+	DeleteComment(context.Context, string) error
 }
 
 // CommentService is a struct that represents a service that manages comments
 type CommentService struct {
-  Store Store
+	Store Store
 }
 
 // NewCommentService creates a new CommentService
 func NewCommentService(store Store) *CommentService {
-  return &CommentService{
-    Store: store,
-  }
+
+	return &CommentService{
+		Store: store,
+	}
 }
 
 // GetComment gets a comment by its ID
 func (s *CommentService) GetComment(ctx context.Context, id string) (Comment, error) {
-  fmt.Println("Getting comment with ID: ", id)
-  cmt, err := s.Store.GetComment(ctx, id)
-  if err != nil {
-    fmt.Println("Error getting comment: ", err)
-    return Comment{}, ErrFetchingComment
-  }
-  return cmt, nil
+	fmt.Println("Getting comment with ID: ", id)
+	cmt, err := s.Store.GetComment(ctx, id)
+	if err != nil {
+		fmt.Println("Error getting comment: ", err)
+
+		return Comment{}, ErrFetchingComment
+	}
+
+	return cmt, nil
 }
 
-func (s *CommentService) CreateComment(ctx context.Context, cmt Comment) (Comment, error){
-  return Comment{}, NotImplemented
+// PostComment creates a new comment
+func (s *CommentService) PostComment(ctx context.Context, cmt Comment) (Comment, error) {
+	fmt.Println("Posting comment: ", cmt)
+	cmt, err := s.Store.PostComment(ctx, cmt)
+	if err != nil {
+		fmt.Println("Error posting comment: ", err)
+
+		return Comment{}, err
+	}
+
+	return cmt, nil
 }
 
+// UpdateComment updates a comment
 func (s *CommentService) UpdateComment(ctx context.Context, cmt Comment) (Comment, error) {
-  return Comment{}, NotImplemented
+	fmt.Println("Updating comment: ", cmt)
+	cmt, err := s.Store.UpdateComment(ctx, cmt.ID, cmt)
+	if err != nil {
+		fmt.Println("Error updating comment: ", err)
+
+		return Comment{}, err
+	}
+
+	return cmt, nil
 }
 
+// DeleteComment deletes a comment
 func (s *CommentService) DeleteComment(ctx context.Context, id string) error {
-  return NotImplemented
+	fmt.Println("Deleting comment with ID: ", id)
+	err := s.Store.DeleteComment(ctx, id)
+	if err != nil {
+		fmt.Println("Error deleting comment: ", err)
+
+		return err
+	}
+
+	return nil
 }
