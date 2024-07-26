@@ -29,20 +29,20 @@ type Store interface {
 }
 
 // CommentService is a struct that represents a service that manages comments
-type CommentService struct {
+type Service struct {
 	Store Store
 }
 
 // NewCommentService creates a new CommentService
-func NewCommentService(store Store) *CommentService {
+func NewService(store Store) *Service {
 
-	return &CommentService{
+	return &Service{
 		Store: store,
 	}
 }
 
 // GetComment gets a comment by its ID
-func (s *CommentService) GetComment(ctx context.Context, id string) (Comment, error) {
+func (s *Service) GetComment(ctx context.Context, id string) (Comment, error) {
 	fmt.Println("Getting comment with ID: ", id)
 	cmt, err := s.Store.GetComment(ctx, id)
 	if err != nil {
@@ -55,7 +55,7 @@ func (s *CommentService) GetComment(ctx context.Context, id string) (Comment, er
 }
 
 // PostComment creates a new comment
-func (s *CommentService) PostComment(ctx context.Context, cmt Comment) (Comment, error) {
+func (s *Service) PostComment(ctx context.Context, cmt Comment) (Comment, error) {
 	fmt.Println("Posting comment: ", cmt)
 	cmt, err := s.Store.PostComment(ctx, cmt)
 	if err != nil {
@@ -68,9 +68,9 @@ func (s *CommentService) PostComment(ctx context.Context, cmt Comment) (Comment,
 }
 
 // UpdateComment updates a comment
-func (s *CommentService) UpdateComment(ctx context.Context, cmt Comment) (Comment, error) {
+func (s *Service) UpdateComment(ctx context.Context, id string, cmt Comment) (Comment, error) {
 	fmt.Println("Updating comment: ", cmt)
-	cmt, err := s.Store.UpdateComment(ctx, cmt.ID, cmt)
+	cmt, err := s.Store.UpdateComment(ctx, id, cmt)
 	if err != nil {
 		fmt.Println("Error updating comment: ", err)
 
@@ -81,7 +81,7 @@ func (s *CommentService) UpdateComment(ctx context.Context, cmt Comment) (Commen
 }
 
 // DeleteComment deletes a comment
-func (s *CommentService) DeleteComment(ctx context.Context, id string) error {
+func (s *Service) DeleteComment(ctx context.Context, id string) error {
 	fmt.Println("Deleting comment with ID: ", id)
 	err := s.Store.DeleteComment(ctx, id)
 	if err != nil {
