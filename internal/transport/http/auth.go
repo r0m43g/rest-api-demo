@@ -6,7 +6,7 @@ import (
 	"strings"
 	log "github.com/sirupsen/logrus"
 
-	jwt "github.com/golang-jwt/jwt/v4"
+	jwt "gopkg.in/golang-jwt/jwt.v3"
 )
 
 func JWTAuthMiddleware(
