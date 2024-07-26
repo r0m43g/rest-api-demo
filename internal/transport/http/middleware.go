@@ -1,8 +1,11 @@
 package http
 
 import (
-	log "github.com/sirupsen/logrus"
+	"context"
 	"net/http"
+	"time"
+
+	log "github.com/sirupsen/logrus"
 )
 
 func JSONMiddleware(next http.Handler) http.Handler {
@@ -19,5 +22,13 @@ func LoggingMiddleware(next http.Handler) http.Handler {
       "path": r.URL.Path,
     }).Info("request received")
     next.ServeHTTP(w, r)
+  })
+}
+
+func TimeoutMiddleware(next http.Handler) http.Handler {
+  return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+    ctx, cancel := context.WithTimeout(r.Context(), 5*time.Second)
+    defer cancel()
+    next.ServeHTTP(w, r.WithContext(ctx))
   })
 }
