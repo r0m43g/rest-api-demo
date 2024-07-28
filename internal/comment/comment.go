@@ -35,7 +35,6 @@ type Service struct {
 
 // NewCommentService creates a new CommentService
 func NewService(store Store) *Service {
-
 	return &Service{
 		Store: store,
 	}
